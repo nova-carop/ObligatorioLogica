@@ -7,9 +7,9 @@ modulo_valido(27).
 
 
 pos_en_alfabeto(Char, Alfabeto, Pos) :-
-    nth0(Pos, Alfabeto, Char), !. %    El corte evita buscar posiciones duplicadas.
+    nth0(Pos, Alfabeto, Char), !. %El corte evita buscar posiciones duplicadas.
 
 
-char_en_alfabeto(Char, Modulo) :-   %    Verifica si un carácter pertenece al alfabeto del módulo.
+char_en_alfabeto(Char, Modulo) :-   %Verifica si un carácter pertenece al alfabeto del módulo.
     alfabeto(Modulo, Alfa),
     member(Char, Alfa).
