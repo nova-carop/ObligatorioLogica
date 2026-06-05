@@ -1,7 +1,3 @@
-% ============================================================
-%  CIFRADO CÉSAR
-% ============================================================
-
 :- encoding(utf8).
 :- consult(alfabeto).
 
@@ -9,17 +5,9 @@
 desp_fijo(3).
 
 
-% ------------------------------------------------------------
-% desplazar(+Pos, +Desp, +Modulo, -NuevaPos)
-% ------------------------------------------------------------
-
 desplazar(Pos, Desp, Modulo, NuevaPos) :-
     NuevaPos is ((Pos + Desp) mod Modulo + Modulo) mod Modulo.
 
-
-% ------------------------------------------------------------
-% cifrar_char(+Char, +Desp, +Idioma, -CharCifrado)
-% ------------------------------------------------------------
 
 cifrar_char(Char, Desp, Idioma, CharCifrado) :-
     alfabeto(Idioma, Alfa),
@@ -31,9 +19,6 @@ cifrar_char(Char, Desp, Idioma, CharCifrado) :-
 cifrar_char(Char, _, _, Char).  % espacios y símbolos: sin cambio
 
 
-% ------------------------------------------------------------
-% cifrar_lista(+Lista, +Desp, +Idioma, -Resultado)
-% ------------------------------------------------------------
 
 cifrar_lista([], _, _, []).
 
@@ -42,22 +27,18 @@ cifrar_lista([H|T], Desp, Idioma, [HC|TC]) :-
     cifrar_lista(T, Desp, Idioma, TC).
 
 
-% ============================================================
 %  MENÚ DE PRUEBA  (será reemplazado por frontend Python)
-% ============================================================
 
 menu :-
     nl,
     write('=== CIFRADO CÉSAR ==='), nl,
     write('1. Cifrar mensaje'), nl,
-    write('2. Descifrar mensaje'), nl,
-    write('3. Salir'), nl,
+    write('2. Salir'), nl,
     write('Opcion: '),
     read(Opcion),
     manejar_opcion(Opcion).
 
 
-% --- Leer idioma ---
 leer_idioma(Idioma) :-
     write('Idioma (espanol/ingles): '),
     read(Idioma),
@@ -66,7 +47,6 @@ leer_idioma(Idioma) :-
     ).
 
 
-% --- Leer desplazamiento ---
 leer_desplazamiento(Desp) :-
     nl,
     write('Tipo de desplazamiento:'), nl,
@@ -105,7 +85,6 @@ mostrar_resultado(Lista) :-
     write(Resultado).
 
 
-% --- Opción 1: Cifrar ---
 manejar_opcion(1) :-
     write('--- CIFRAR ---'), nl,
     leer_mensaje(Lista),
@@ -116,24 +95,11 @@ manejar_opcion(1) :-
     menu.
 
 
-% --- Opción 2: Descifrar ---
+
 manejar_opcion(2) :-
-    write('--- DESCIFRAR ---'), nl,
-    leer_mensaje(Lista),
-    leer_idioma(Idioma),
-    leer_desplazamiento(Desp),
-    DesNeg is -Desp,
-    cifrar_lista(Lista, DesNeg, Idioma, Original),
-    nl, write('Resultado: '), mostrar_resultado(Original), nl,
-    menu.
-
-
-% --- Opción 3: Salir ---
-manejar_opcion(3) :-
     write('Hasta luego.'), nl.
 
 
-% --- Opción inválida ---
 manejar_opcion(_) :-
     write('Opcion invalida.'), nl,
     menu.
