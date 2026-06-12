@@ -8,7 +8,6 @@
 
 
 % Pasa a mayusculas, descarta lo que no sea A-Z y unifica J->I.
-% Usa es_letra/1 y j_a_i/2, definidos en alfabeto.pl
 limpiar(Texto, Limpio) :-
     upcase_atom(Texto, Mayus),
     atom_chars(Mayus, Chars),
@@ -18,7 +17,7 @@ limpiar(Texto, Limpio) :-
 
 construir_matriz(Clave, Matriz) :-
     limpiar(Clave, ClaveLimpia),
-    alfabeto(playfair, Alfabeto),       % alfabeto de 25 letras (definido en alfabeto.pl)
+    alfabeto(playfair, Alfabeto),       
     append(ClaveLimpia, Alfabeto, Todo),
     sin_repetidos(Todo, Matriz).
 
@@ -33,7 +32,7 @@ formar_pares([], []).
 formar_pares([X], [[X,R]]) :- !,
     relleno(X, R).
 
-% Dos letras iguales seguidas -> separar con relleno.
+% Dos letras iguales seguidas se separan con relleno.
 formar_pares([X,X|Resto], [[X,R]|Pares]) :- !,
     relleno(X, R),
     formar_pares([X|Resto], Pares).
@@ -73,11 +72,8 @@ transformar_par(Matriz, Dir, [A,B], [RA,RB]) :-
         letra_en(Matriz, FB, CA, RB)
     ).
 
-
 desplazar(I, Dir, I2) :-
     I2 is (I + Dir + 5) mod 5.
-
-
 
 % PREDICADOS PRINCIPALES
 
