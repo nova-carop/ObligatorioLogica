@@ -1,40 +1,28 @@
-% se necesita una clave,una matriz 5x5 y el texto a cifrar
-%se puede cifrar con y sin espacios(a eleccion del usuario)
-%I/J unificados para que quede 5x5 la matriz
-%Las letras repetidas se ponen una vez
-%Se agrega una X entre letras repetidas o al final si el mensaje tiene longitud impar.
+% se necesita una clave, una matriz 5x5 y el texto a cifrar
+% se puede cifrar con y sin espacios (a eleccion del usuario)
+% I/J unificados para que quede 5x5 la matriz
+% Las letras repetidas se ponen una vez
+% Se agrega una X entre letras repetidas o al final si el mensaje tiene longitud impar.
 :- encoding(utf8).
-
-:- encoding(utf8).
-
-
-%Pasa a mayúsculas, descarta lo que no sea A-Z y unifica J->I.
+:- consult('alfabeto').
 
 
+% Pasa a mayusculas, descarta lo que no sea A-Z y unifica J->I.
+% Usa es_letra/1 y j_a_i/2, definidos en alfabeto.pl
 limpiar(Texto, Limpio) :-
     upcase_atom(Texto, Mayus),
     atom_chars(Mayus, Chars),
     include(es_letra, Chars, Letras),
     maplist(j_a_i, Letras, Limpio).
 
-% Solo letras del alfabeto inglés A-Z (descarta espacios, tildes, signos).
-es_letra(C) :-
-    char_code(C, X),
-    X >= 0'A, X =< 0'Z.
-
-% Unificación I/J: toda J se convierte en I.
-j_a_i('J', 'I') :- !.
-j_a_i(C,   C).
-
-
 
 construir_matriz(Clave, Matriz) :-
     limpiar(Clave, ClaveLimpia),
-    atom_chars('ABCDEFGHIKLMNOPQRSTUVWXYZ', Alfabeto),   
+    alfabeto(playfair, Alfabeto),       % alfabeto de 25 letras (definido en alfabeto.pl)
     append(ClaveLimpia, Alfabeto, Todo),
     sin_repetidos(Todo, Matriz).
 
-% Elimina repetidos conservando la primera aparición.
+% Elimina repetidos conservando la primera aparicion.
 sin_repetidos([], []).
 sin_repetidos([X|Xs], [X|Ys]) :-
     exclude(==(X), Xs, Resto),
@@ -80,7 +68,7 @@ transformar_par(Matriz, Dir, [A,B], [RA,RB]) :-
     ->  desplazar(FA, Dir, FA2), desplazar(FB, Dir, FB2),
         letra_en(Matriz, FA2, CA, RA),
         letra_en(Matriz, FB2, CB, RB)
-    ;                                              % rectángulo -> cambio de columnas
+    ;                                              % rectangulo -> cambio de columnas
         letra_en(Matriz, FA, CB, RA),
         letra_en(Matriz, FB, CA, RB)
     ).
@@ -93,18 +81,18 @@ desplazar(I, Dir, I2) :-
 
 % PREDICADOS PRINCIPALES
 
-%Cifrar: salida sin espacios 
+% Cifrar: salida sin espacios
 cifrar(Clave, Texto, Cifrado) :-
     procesar(Clave, Texto, 1, Pares),
     flatten(Pares, Chars),
     atom_chars(Cifrado, Chars).
 
-%Cifrar: salida con espacios-
+% Cifrar: salida con espacios
 cifrar_con_espacios(Clave, Texto, Cifrado) :-
     procesar(Clave, Texto, 1, Pares),
     pares_a_texto(Pares, Cifrado).
 
-%Descifrar (a partir del texto cifrado continuo)
+% Descifrar (a partir del texto cifrado continuo)
 descifrar(Clave, Cifrado, Texto) :-
     procesar(Clave, Cifrado, -1, Pares),
     flatten(Pares, Chars),
@@ -124,9 +112,7 @@ par_a_atomo([A,B], AB) :-
     atom_chars(AB, [A,B]).
 
 
-% ------------------------------------------------------------
-%  7. UTILIDAD: mostrar la matriz por pantalla
-% ------------------------------------------------------------
+% ESTA PARTE ES SOLO PARA PROBAR QUE FUNCIONA, SE PUEDE BORRAR
 
 mostrar_matriz(Clave) :-
     construir_matriz(Clave, Matriz),
@@ -187,11 +173,15 @@ procesar_opcion(_) :-
     writeln(''), writeln('  Opcion invalida, intenta de nuevo.'),
     menu.
 
-% --- Lectura de entrada del usuario como átomo ---
+
 pedir(Etiqueta, Valor) :-
     format("  ~w: ", [Etiqueta]),
     leer_atomo(Valor).
 
 leer_atomo(Atomo) :-
     read_line_to_string(user_input, Linea),
-    ( Linea == end_of_file -> Atomo = '5' ; atom_string(Atomo, Linea) ).
+    (   Linea == end_of_file
+    ->  Atomo = '5'
+    ;   split_string(Linea, "", " \t.\r\n", [Limpia]),   % quita espacios y punto final
+        atom_string(Atomo, Limpia)
+    ).
