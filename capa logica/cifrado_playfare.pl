@@ -110,14 +110,12 @@ descifrar(Clave, Cifrado, Texto) :-
     flatten(Pares, Chars),
     atom_chars(Texto, Chars).
 
-% Núcleo común: limpia, arma pares y los transforma.
 procesar(Clave, Texto, Dir, ParesResultado) :-
     construir_matriz(Clave, Matriz),
     limpiar(Texto, Limpio),
     formar_pares(Limpio, Pares),
     maplist(transformar_par(Matriz, Dir), Pares, ParesResultado).
 
-% Convierte [[A,B],[C,D]] en el átomo 'AB CD'.
 pares_a_texto(Pares, Texto) :-
     maplist(par_a_atomo, Pares, Atomos),
     atomic_list_concat(Atomos, ' ', Texto).
@@ -140,29 +138,6 @@ imprimir_filas([A,B,C,D,E|Resto]) :-
     format("  ~w ~w ~w ~w ~w~n", [A,B,C,D,E]),
     imprimir_filas(Resto).
 
-
-% ============================================================
-%  EJEMPLOS DE USO (cárgalos con: ?- swipl playfair.pl )
-% ------------------------------------------------------------
-%  ?- mostrar_matriz('PLAYFAIR EXAMPLE').
-%  ?- cifrar('PLAYFAIR EXAMPLE', 'HIDE THE GOLD', C).
-%       C = 'BMODZBXDNABE...'
-%  ?- cifrar_con_espacios('CLAVE', 'mensaje secreto', C).
-%  ?- descifrar('PLAYFAIR EXAMPLE', 'BMODZBXDNABE', T).
-% ============================================================
-
-
-% ============================================================
-%  8. MENÚ DE PRUEBA INTERACTIVO
-% ------------------------------------------------------------
-%  Para usarlo en VS Code:
-%    1) Abre la terminal y ejecuta:   swipl playfair.pl
-%    2) En el prompt ?-  escribe:     menu.
-%  (o descomenta la línea de initialization de más abajo para
-%   que el menú arranque solo al cargar el archivo).
-% ============================================================
-
-% :- initialization(menu).   % <- descomenta para arranque automático
 
 menu :-
     nl,
@@ -220,4 +195,3 @@ pedir(Etiqueta, Valor) :-
 leer_atomo(Atomo) :-
     read_line_to_string(user_input, Linea),
     ( Linea == end_of_file -> Atomo = '5' ; atom_string(Atomo, Linea) ).
-% ============================================================
