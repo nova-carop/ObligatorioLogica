@@ -26,6 +26,12 @@ cifrar_lista([H|T], Desp, Idioma, [HC|TC]) :-
     cifrar_char(H, Desp, Idioma, HC),
     cifrar_lista(T, Desp, Idioma, TC).
 
+% --- DESCIFRADO ---
+descifrar_lista(Lista, Desp, Idioma, Descifrado) :-
+    DespNegativo is -Desp,
+    cifrar_lista(Lista, DespNegativo, Idioma, Descifrado).
+
+
 
 %  MENÚ DE PRUEBA  (será reemplazado por frontend Python)
 
@@ -33,10 +39,12 @@ menu :-
     nl,
     write('=== CIFRADO CÉSAR ==='), nl,
     write('1. Cifrar mensaje'), nl,
-    write('2. Salir'), nl,
+    write('2. Descifrar mensaje'), nl,
+    write('3. Salir'), nl,
     write('Opcion: '),
     read(Opcion),
     manejar_opcion(Opcion).
+
 
 
 leer_idioma(Idioma) :-
@@ -94,9 +102,19 @@ manejar_opcion(1) :-
     nl, write('Resultado: '), mostrar_resultado(Cifrado), nl,
     menu.
 
-
-
 manejar_opcion(2) :-
+    write('--- DESCIFRAR ---'), nl,
+    leer_mensaje(Lista),
+    leer_idioma(Idioma),
+    leer_desplazamiento(Desp),
+    descifrar_lista(Lista, Desp, Idioma, Descifrado),
+    nl, write('Resultado: '), mostrar_resultado(Descifrado), nl,
+    menu.
+
+
+
+
+manejar_opcion(3) :-
     write('Hasta luego.'), nl.
 
 
