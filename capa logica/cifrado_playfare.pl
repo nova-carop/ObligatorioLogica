@@ -107,4 +107,3 @@ pares_a_texto(Pares, Texto) :-
 par_a_atomo([A,B], AB) :-
     atom_chars(AB, [A,B]).
 
-

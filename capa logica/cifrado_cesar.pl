@@ -1,9 +1,6 @@
 :- encoding(utf8).
 :- consult(alfabeto).
 
-% Desplazamiento fijo para la demo educativa
-desp_fijo(3).
-
 
 desplazar(Pos, Desp, Modulo, NuevaPos) :-
     NuevaPos is ((Pos + Desp) mod Modulo + Modulo) mod Modulo.
@@ -30,6 +27,5 @@ cifrar_lista([H|T], Desp, Idioma, [HC|TC]) :-
 descifrar_lista(Lista, Desp, Idioma, Descifrado) :-
     DespNegativo is -Desp,
     cifrar_lista(Lista, DespNegativo, Idioma, Descifrado).
-
 
 
